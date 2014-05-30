@@ -41,7 +41,7 @@ namespace Client {
 
         public game () {
             InitializeComponent ();
-            pictureBox1.Image = 
+            backCard.Image = Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\back.bmp" );
         }
 
         public game ( TCPConnection con, lobby step2_inst, String host, String guest, UInt16 color ) {

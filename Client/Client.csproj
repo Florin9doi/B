@@ -48,7 +48,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cards.cs" />
     <Compile Include="1lobby.cs">
       <SubType>Form</SubType>
     </Compile>
