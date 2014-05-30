@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(game));
             this.chatOut = new System.Windows.Forms.TextBox();
             this.chatAdd = new System.Windows.Forms.TextBox();
             this.gameBoard = new System.Windows.Forms.DataGridView();
@@ -110,7 +109,7 @@
             // 
             // player1card1
             // 
-            this.player1card1.InitialImage = ((System.Drawing.Image)(resources.GetObject("player1card1.InitialImage")));
+            this.player1card1.InitialImage = null;
             this.player1card1.Location = new System.Drawing.Point(12, 12);
             this.player1card1.Name = "player1card1";
             this.player1card1.Size = new System.Drawing.Size(71, 96);
@@ -119,7 +118,7 @@
             // 
             // player1card2
             // 
-            this.player1card2.InitialImage = ((System.Drawing.Image)(resources.GetObject("player1card2.InitialImage")));
+            this.player1card2.InitialImage = null;
             this.player1card2.Location = new System.Drawing.Point(89, 12);
             this.player1card2.Name = "player1card2";
             this.player1card2.Size = new System.Drawing.Size(71, 96);
@@ -128,7 +127,7 @@
             // 
             // player1card3
             // 
-            this.player1card3.InitialImage = ((System.Drawing.Image)(resources.GetObject("player1card3.InitialImage")));
+            this.player1card3.InitialImage = null;
             this.player1card3.Location = new System.Drawing.Point(166, 12);
             this.player1card3.Name = "player1card3";
             this.player1card3.Size = new System.Drawing.Size(71, 96);
@@ -137,7 +136,7 @@
             // 
             // player1card4
             // 
-            this.player1card4.InitialImage = ((System.Drawing.Image)(resources.GetObject("player1card4.InitialImage")));
+            this.player1card4.InitialImage = null;
             this.player1card4.Location = new System.Drawing.Point(243, 12);
             this.player1card4.Name = "player1card4";
             this.player1card4.Size = new System.Drawing.Size(71, 96);
@@ -146,7 +145,7 @@
             // 
             // player1card5
             // 
-            this.player1card5.InitialImage = ((System.Drawing.Image)(resources.GetObject("player1card5.InitialImage")));
+            this.player1card5.InitialImage = null;
             this.player1card5.Location = new System.Drawing.Point(320, 12);
             this.player1card5.Name = "player1card5";
             this.player1card5.Size = new System.Drawing.Size(71, 96);
@@ -155,7 +154,7 @@
             // 
             // player2card5
             // 
-            this.player2card5.InitialImage = ((System.Drawing.Image)(resources.GetObject("player2card5.InitialImage")));
+            this.player2card5.InitialImage = null;
             this.player2card5.Location = new System.Drawing.Point(320, 216);
             this.player2card5.Name = "player2card5";
             this.player2card5.Size = new System.Drawing.Size(71, 96);
@@ -164,7 +163,7 @@
             // 
             // player2card4
             // 
-            this.player2card4.InitialImage = ((System.Drawing.Image)(resources.GetObject("player2card4.InitialImage")));
+            this.player2card4.InitialImage = null;
             this.player2card4.Location = new System.Drawing.Point(243, 216);
             this.player2card4.Name = "player2card4";
             this.player2card4.Size = new System.Drawing.Size(71, 96);
@@ -173,7 +172,7 @@
             // 
             // player2card3
             // 
-            this.player2card3.InitialImage = ((System.Drawing.Image)(resources.GetObject("player2card3.InitialImage")));
+            this.player2card3.InitialImage = null;
             this.player2card3.Location = new System.Drawing.Point(166, 216);
             this.player2card3.Name = "player2card3";
             this.player2card3.Size = new System.Drawing.Size(71, 96);
@@ -182,7 +181,7 @@
             // 
             // player2card2
             // 
-            this.player2card2.InitialImage = ((System.Drawing.Image)(resources.GetObject("player2card2.InitialImage")));
+            this.player2card2.InitialImage = null;
             this.player2card2.Location = new System.Drawing.Point(89, 216);
             this.player2card2.Name = "player2card2";
             this.player2card2.Size = new System.Drawing.Size(71, 96);
@@ -191,7 +190,7 @@
             // 
             // player2card1
             // 
-            this.player2card1.InitialImage = ((System.Drawing.Image)(resources.GetObject("player2card1.InitialImage")));
+            this.player2card1.InitialImage = null;
             this.player2card1.Location = new System.Drawing.Point(12, 216);
             this.player2card1.Name = "player2card1";
             this.player2card1.Size = new System.Drawing.Size(71, 96);
@@ -200,7 +199,7 @@
             // 
             // backCard
             // 
-            this.backCard.InitialImage = ((System.Drawing.Image)(resources.GetObject("backCard.InitialImage")));
+            this.backCard.InitialImage = null;
             this.backCard.Location = new System.Drawing.Point(166, 114);
             this.backCard.Name = "backCard";
             this.backCard.Size = new System.Drawing.Size(71, 96);
