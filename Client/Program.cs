@@ -17,8 +17,9 @@ namespace Client
         static void Main()
         {
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new step1_con());
+            Application.SetCompatibleTextRenderingDefault ( false );
+            //Application.Run ( new step1_con () );
+            Application.Run ( new game () );
         }
     }
 }

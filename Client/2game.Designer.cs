@@ -1,6 +1,6 @@
 ﻿namespace Client
 {
-    partial class step2_game
+    partial class game
     {
         /// <summary>
         /// Required designer variable.
@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(game));
             this.guestPlayer = new System.Windows.Forms.Label();
             this.hostPlayer = new System.Windows.Forms.Label();
             this.chatOut = new System.Windows.Forms.TextBox();
@@ -36,15 +37,18 @@
             this.gameBoard = new System.Windows.Forms.DataGridView();
             this.btnExit = new System.Windows.Forms.Button();
             this.btnReset = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.gameBoard)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // guestPlayer
             // 
+            this.guestPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.guestPlayer.BackColor = System.Drawing.Color.Green;
             this.guestPlayer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.guestPlayer.ForeColor = System.Drawing.Color.White;
-            this.guestPlayer.Location = new System.Drawing.Point(409, 77);
+            this.guestPlayer.Location = new System.Drawing.Point(926, 77);
             this.guestPlayer.Name = "guestPlayer";
             this.guestPlayer.Size = new System.Drawing.Size(65, 23);
             this.guestPlayer.TabIndex = 16;
@@ -53,10 +57,11 @@
             // 
             // hostPlayer
             // 
+            this.hostPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.hostPlayer.BackColor = System.Drawing.Color.Green;
             this.hostPlayer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.hostPlayer.ForeColor = System.Drawing.Color.White;
-            this.hostPlayer.Location = new System.Drawing.Point(336, 77);
+            this.hostPlayer.Location = new System.Drawing.Point(853, 77);
             this.hostPlayer.Name = "hostPlayer";
             this.hostPlayer.Size = new System.Drawing.Size(66, 23);
             this.hostPlayer.TabIndex = 15;
@@ -65,7 +70,8 @@
             // 
             // chatOut
             // 
-            this.chatOut.Location = new System.Drawing.Point(337, 133);
+            this.chatOut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chatOut.Location = new System.Drawing.Point(854, 133);
             this.chatOut.Multiline = true;
             this.chatOut.Name = "chatOut";
             this.chatOut.ReadOnly = true;
@@ -75,7 +81,8 @@
             // 
             // chatAdd
             // 
-            this.chatAdd.Location = new System.Drawing.Point(337, 323);
+            this.chatAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chatAdd.Location = new System.Drawing.Point(854, 323);
             this.chatAdd.Name = "chatAdd";
             this.chatAdd.Size = new System.Drawing.Size(137, 20);
             this.chatAdd.TabIndex = 20;
@@ -83,10 +90,11 @@
             // 
             // label4
             // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.BackColor = System.Drawing.Color.DarkGoldenrod;
             this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(337, 107);
+            this.label4.Location = new System.Drawing.Point(854, 107);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(137, 23);
             this.label4.TabIndex = 22;
@@ -101,18 +109,19 @@
             this.gameBoard.AllowUserToResizeRows = false;
             this.gameBoard.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gameBoard.ColumnHeadersVisible = false;
-            this.gameBoard.Location = new System.Drawing.Point(12, 12);
+            this.gameBoard.Location = new System.Drawing.Point(854, 349);
             this.gameBoard.Name = "gameBoard";
             this.gameBoard.RowHeadersVisible = false;
             this.gameBoard.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.gameBoard.Size = new System.Drawing.Size(318, 331);
+            this.gameBoard.Size = new System.Drawing.Size(137, 136);
             this.gameBoard.TabIndex = 0;
             this.gameBoard.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gameBoard_CellContentClick);
             this.gameBoard.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gameBoard_CellContentDoubleClick);
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(337, 43);
+            this.btnExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExit.Location = new System.Drawing.Point(854, 43);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(137, 25);
             this.btnExit.TabIndex = 24;
@@ -122,7 +131,8 @@
             // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(337, 12);
+            this.btnReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnReset.Location = new System.Drawing.Point(854, 12);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(137, 25);
             this.btnReset.TabIndex = 23;
@@ -130,12 +140,22 @@
             this.btnReset.UseVisualStyleBackColor = true;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.InitialImage")));
+            this.pictureBox1.Location = new System.Drawing.Point(117, 21);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(71, 96);
+            this.pictureBox1.TabIndex = 25;
+            this.pictureBox1.TabStop = false;
+            // 
             // step2_game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(484, 357);
+            this.ClientSize = new System.Drawing.Size(1001, 497);
             this.ControlBox = false;
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.label4);
@@ -146,8 +166,9 @@
             this.Controls.Add(this.gameBoard);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "step2_game";
-            this.Text = "Five Stones";
+            this.Text = "Blackjack";
             ((System.ComponentModel.ISupportInitialize)(this.gameBoard)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -163,6 +184,7 @@
         private System.Windows.Forms.DataGridView gameBoard;
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 

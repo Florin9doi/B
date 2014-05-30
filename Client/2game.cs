@@ -13,9 +13,9 @@ using System.Threading;
 using Connection;
 
 namespace Client {
-    public partial class step2_game : Form {
+    public partial class game : Form {
         private TCPConnection con; // Connection instance
-        private step1_con step2_inst; // window instance
+        private lobby step2_inst; // window instance
         private Image[] GamePieces; // images array
 
         private bool canPlay = true; // your turn ?
@@ -27,7 +27,7 @@ namespace Client {
             if ( myColor == 1 && perm == true ) {
                 hostPlayer.BackColor = Color.Green;
                 guestPlayer.BackColor = Color.DarkGray;
-            } else if ( myColor == 1 && perm == false ) {//|| myColor == 2 && perm == true ) {
+            } else if ( myColor == 1 && perm == false ) {
                 hostPlayer.BackColor = Color.LightCoral;
                 guestPlayer.BackColor = Color.DarkGray;
             } else if ( myColor == 2 && perm == true ) {
@@ -39,7 +39,12 @@ namespace Client {
             }
         }
 
-        public step2_game ( TCPConnection con, step1_con step2_inst, String host, String guest, UInt16 color ) {
+        public game () {
+            InitializeComponent ();
+            pictureBox1.Image = 
+        }
+
+        public game ( TCPConnection con, lobby step2_inst, String host, String guest, UInt16 color ) {
             InitializeComponent ();
 
             this.con = con;

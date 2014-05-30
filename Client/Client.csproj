@@ -48,22 +48,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="step1_con.cs">
+    <Compile Include="Cards.cs" />
+    <Compile Include="1lobby.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="step1_con.Designer.cs">
-      <DependentUpon>step1_con.cs</DependentUpon>
+    <Compile Include="1lobby.Designer.cs">
+      <DependentUpon>1lobby.cs</DependentUpon>
     </Compile>
-    <Compile Include="step2_game.cs">
+    <Compile Include="2game.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="step2_game.Designer.cs">
-      <DependentUpon>step2_game.cs</DependentUpon>
+    <Compile Include="2game.Designer.cs">
+      <DependentUpon>2game.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="step1_con.resx">
-      <DependentUpon>step1_con.cs</DependentUpon>
+    <EmbeddedResource Include="1lobby.resx">
+      <DependentUpon>1lobby.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -74,8 +75,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="step2_game.resx">
-      <DependentUpon>step2_game.cs</DependentUpon>
+    <EmbeddedResource Include="2game.resx">
+      <DependentUpon>2game.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

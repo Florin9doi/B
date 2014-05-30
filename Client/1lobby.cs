@@ -11,16 +11,16 @@ using System.IO;
 using System.Net;
 
 namespace Client {
-    public partial class step1_con : Form {
+    public partial class lobby : Form {
         private const int port = 3000;
         private Image[] GameStatus;
         private TCPConnection con;
         private String name;
         private bool gameCreated = false;
-        private step2_game step2;
+        private game step2;
 
         // INIT
-        public step1_con () {
+        public lobby () {
             InitializeComponent ();
 
             GameStatus = new Image[3];
@@ -102,11 +102,11 @@ namespace Client {
             else if ( text.StartsWith ( "0GJ_" ) ) {
                 string[] tmp = text.Substring ( 4 ).Split ( new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries );
                 if ( tmp[0].Equals ( name ) ) { // host
-                    step2 = new step2_game ( con, this, tmp[0], tmp[1], 1 );
+                    step2 = new game ( con, this, tmp[0], tmp[1], 1 );
                     step2.Show ();
                     this.Hide ();
                 } else if ( tmp[1].Equals ( name ) ) { // guest
-                    step2 = new step2_game ( con, this, tmp[0], tmp[1], 2 );
+                    step2 = new game ( con, this, tmp[0], tmp[1], 2 );
                     step2.Show ();
                     this.Hide ();
                 }
@@ -132,16 +132,19 @@ namespace Client {
 
         // join game
         private void btnJoin_Click ( object sender, EventArgs e ) {
+        }
+
+        private void btnExit_Click ( object sender, EventArgs e ) {
+            Application.Exit ();
+        }
+
+        private void gameList_CellMouseDoubleClick ( object sender, DataGridViewCellMouseEventArgs e ) {
             if ( gameList.SelectedRows.Count == 1 // !outOfRange
                 && gameList[1, gameList.CurrentCell.RowIndex].Value.Equals ( GameStatus[0] )  // available
                 && !gameList[0, gameList.CurrentCell.RowIndex].Value.Equals ( name ) ) //  && !myself
                 con.send ( Encoding.Unicode.GetBytes ( "0GJ_" + gameList[0, gameList.CurrentCell.RowIndex].Value + ";" + name ) );
             else
                 MessageBox.Show ( "Not allowed" );
-        }
-
-        private void btnExit_Click ( object sender, EventArgs e ) {
-            Application.Exit ();
         }
     }
 }
