@@ -197,6 +197,7 @@
             this.btnStand.TabIndex = 36;
             this.btnStand.Text = "Stand";
             this.btnStand.UseVisualStyleBackColor = true;
+            this.btnStand.Click += new System.EventHandler(this.btnStand_Click);
             // 
             // btnHit
             // 
@@ -208,6 +209,7 @@
             this.btnHit.TabIndex = 37;
             this.btnHit.Text = "HIT";
             this.btnHit.UseVisualStyleBackColor = false;
+            this.btnHit.Click += new System.EventHandler(this.btnHit_Click);
             // 
             // contextMenuStrip1
             // 

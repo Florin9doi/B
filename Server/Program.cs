@@ -14,32 +14,33 @@ namespace Server {
 
         public struct GameStruct {
             public UInt64 gameNr;
+            public UInt64 who;
             public String player1, player2;
             public bool stand1, stand2;
-            public UInt64 who;
+
             public UInt64 cardMax;
             public UInt64[] cardsArray;
             Random rnd;
 
             public GameStruct ( UInt64 gameNr, string player1, UInt16 who ) {
                 this.gameNr = gameNr;
+                this.who = who;
                 this.player1 = player1;
                 this.player2 = "";
                 stand1 = false;
                 stand2 = false;
-                this.who = who;
                 cardMax = 52;
                 cardsArray = new UInt64[53];
                 rnd = new Random ();
             }
 
-            public GameStruct ( UInt64 gameNr, string player1, string player2, UInt16 status ) {
+            public GameStruct ( UInt64 gameNr, string player1, string player2, UInt16 who ) {
                 this.gameNr = gameNr;
+                this.who = who;
                 this.player1 = player1;
                 this.player2 = player2;
                 stand1 = false;
                 stand2 = false;
-                this.who = status;
                 cardMax = 52;
                 cardsArray = new UInt64[53];
                 rnd = new Random ();
@@ -55,6 +56,13 @@ namespace Server {
                     return returnCard;
                 }
                 return 0;
+            }
+
+            public void SetStand ( UInt64 who, bool state ) {
+                if ( who == 1 )
+                    stand1 = state;
+                else if ( who == 2 )
+                    stand2 = state;
             }
 
         }
@@ -160,45 +168,18 @@ namespace Server {
                 //    return "D;" + returnCard;
 
             // game move
-                //else if ( text.StartsWith ( "0GM_" ) ) {
-                //    string[] tmp = text.Substring ( 4 ).Split ( new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries );
+            else if ( text.StartsWith ( "0GM_" ) ) {
+                string[] tmp = text.Substring ( 4 ).Split ( new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries );
 
-            //    int x = int.Parse ( tmp[1] );
-                //    int y = int.Parse ( tmp[2] );
-                //    Byte c = Byte.Parse ( tmp[3] );
-
-            //    if ( gameRooms[gamePointer[tmp[0]]].status == UInt64.Parse ( tmp[3] ) ) { // right player
-                //        Console.WriteLine ( tmp[0] + " has choosed [" + x + "," + y + "]" );
-                //        gameRooms[gamePointer[tmp[0]]].gameBoard[x, y] = c;
-
-            //        con.send ( Encoding.Unicode.GetBytes ( "0GM_" + gameRooms[gamePointer[tmp[0]]].player1
-                //            + ";" + tmp[1] + ";" + tmp[2] + ";" + tmp[3] ) );
-
-            //        // check wins
-                //        bool win = false;
-                //        int same = 0;
-                //        for ( int i = Math.Max ( 0, x - 4 ); i < Math.Min ( 14, x + 4 ) && win == false; i++ ) {
-                //            if ( gameRooms[gamePointer[tmp[0]]].gameBoard[i, y] == gameRooms[gamePointer[tmp[0]]].gameBoard[i + 1, y]
-                //                && gameRooms[gamePointer[tmp[0]]].gameBoard[i, y] == c )
-                //                same++;
-                //            else same = 0;
-
-            //            if ( same >= 4 )
-                //                win = true;
-                //        }
-
-            //        same = 0;
-                //        for ( int i = Math.Max ( 0, y - 4 ); i < Math.Min ( 14, y + 4 ) && win == false; i++ ) {
-                //            if ( gameRooms[gamePointer[tmp[0]]].gameBoard[x, i] == gameRooms[gamePointer[tmp[0]]].gameBoard[x, i + 1]
-                //                && gameRooms[gamePointer[tmp[0]]].gameBoard[x, i] == c )
-                //                same++;
-                //            else same = 0;
-
-            //            if ( same >= 4 )
-                //                win = true;
-                //        }
-
-            //        if ( win ) {
+                if ( gameRooms[gamePointer[tmp[0]]].who == UInt64.Parse ( tmp[1] ) ) { // right player
+                    if ( UInt64.Parse ( tmp[2] ) == 0 ) { // stand
+                        gameRooms[gamePointer[tmp[0]]].SetStand ( UInt64.Parse ( tmp[1] ), true );
+                        Console.WriteLine ( tmp[0] + " has choosed to stand" );
+                    } else if ( UInt64.Parse ( tmp[2] ) == 1 ) { // hit
+                        Console.WriteLine ( tmp[0] + " has choosed to hit" );
+                    }
+                }
+                //        if ( win ) {
                 //            con.send ( Encoding.Unicode.GetBytes ( "0GW_" + tmp[0] ) );
                 //            Console.WriteLine ( tmp[0] + " has won !!" );
                 //        } else {
@@ -208,7 +189,7 @@ namespace Server {
                 //        }
                 //    }
                 //} 
-            else {
+            } else {
                 Console.WriteLine ( text );
             }
         }

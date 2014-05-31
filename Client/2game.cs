@@ -156,23 +156,22 @@ namespace Client {
             this.Hide ();
         }
 
-        //// make a move
-        //private void gameBoard_CellContentClick ( object sender, DataGridViewCellEventArgs e ) {
-        //    if ( canPlay == true && gameBoard[e.ColumnIndex, e.RowIndex].Value.Equals ( GamePieces[0] ) ) {
-        //        setPermission ( false );
-        //        gameBoard[e.ColumnIndex, e.RowIndex].Value = GamePieces[myPosition];
-        //        con.send ( Encoding.Unicode.GetBytes ( "0GM_" + myName + ";" + e.ColumnIndex + ";" + e.RowIndex + ";" + myPosition ) );
-        //    }
-        //}
-
-        // make a move
-        //private void gameBoard_CellContentDoubleClick ( object sender, DataGridViewCellEventArgs e ) {
-        //    gameBoard_CellContentClick ( sender, e );
-        //}
-
         // reset table
         private void btnReset_Click ( object sender, EventArgs e ) {
             con.send ( Encoding.Unicode.GetBytes ( "0GR_" + GetHost () ) );
+        }
+
+        // Stand
+        private void btnStand_Click ( object sender, EventArgs e ) {
+            setPermission ( false );
+            con.send ( Encoding.Unicode.GetBytes ( "0GM_" + myName + ";" + myPosition + ";" + 0 ) );
+        }
+
+
+        // Hit
+        private void btnHit_Click ( object sender, EventArgs e ) {
+            setPermission ( false );
+            con.send ( Encoding.Unicode.GetBytes ( "0GM_" + myName + ";" + myPosition + ";" + 1 ) );
         }
     }
 }
