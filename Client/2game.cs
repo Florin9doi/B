@@ -16,27 +16,33 @@ namespace Client {
     public partial class game : Form {
         private TCPConnection con; // Connection instance
         private lobby step2_inst; // window instance
-        private Image[] GamePieces; // images array
+        private PictureBox[] pb;
 
         private bool canPlay = true; // your turn ?
-        private UInt16 myColor;
+        private UInt16 myPosition;
         private String myName;
+        private UInt16 myCardPos = 0;
+        private String opponentName;
+        private UInt16 opponentCardPos = 5;
 
         private void setPermission ( bool perm ) {
             canPlay = perm;
-            if ( myColor == 1 && perm == true ) {
-                hostPlayer.BackColor = Color.Green;
-                guestPlayer.BackColor = Color.DarkGray;
-            } else if ( myColor == 1 && perm == false ) {
-                hostPlayer.BackColor = Color.LightCoral;
-                guestPlayer.BackColor = Color.DarkGray;
-            } else if ( myColor == 2 && perm == true ) {
-                hostPlayer.BackColor = Color.DarkGray;
-                guestPlayer.BackColor = Color.Green;
-            } else if ( myColor == 2 && perm == false ) {
-                hostPlayer.BackColor = Color.DarkGray;
-                guestPlayer.BackColor = Color.LightCoral;
-            }
+        }
+
+        private string GetHost () {
+            if ( myPosition == 1 )
+                return myName;
+            else if ( myPosition == 2 )
+                return opponentName;
+            else return null;
+        }
+
+        private string GetGuest () {
+            if ( myPosition == 2 )
+                return myName;
+            else if ( myPosition == 1 )
+                return opponentName;
+            else return null;
         }
 
         public game () {
@@ -44,40 +50,36 @@ namespace Client {
             backCard.Image = Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\back.bmp" );
         }
 
-        public game ( TCPConnection con, lobby step2_inst, String host, String guest, UInt16 color ) {
+        public game ( TCPConnection con, lobby step2_inst, String host, String guest, UInt16 position ) {
             InitializeComponent ();
+
+            pb = new PictureBox[10];
+            pb[0] = player1card1;
+            pb[1] = player1card2;
+            pb[2] = player1card3;
+            pb[3] = player1card4;
+            pb[4] = player1card5;
+            pb[5] = player2card1;
+            pb[6] = player2card2;
+            pb[7] = player2card3;
+            pb[8] = player2card4;
+            pb[9] = player2card5;
 
             this.con = con;
             con.OnExceptionRaised += con_OnExceptionRaised;
             con.OnReceiveCompleted += con_OnReceiveCompleted;
 
             this.step2_inst = step2_inst;
-            hostPlayer.Text = host;
-            guestPlayer.Text = guest;
-            this.myColor = color;
-            this.myName = color == 1 ? host : guest;
+            this.myPosition = position;
+            myName = position == 1 ? host : guest;
+            opponentName = position == 1 ? guest : host;
             this.Text = myName;
-            setPermission ( color == 1 ? true : false );
-
-            GamePieces = new Image[3];
-            GamePieces[0] = Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\piece0.png" );
-            GamePieces[1] = Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\piece1.png" );
-            GamePieces[2] = Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\piece2.png" );
-
-            for ( int i = 0; i < 15; i++ )
-                gameBoard.Columns.Add ( new DataGridViewImageColumn () );
-            for ( int i = 0; i < 15; i++ )
-                gameBoard.Rows.Insert ( 0 );
-            for ( int i = 0; i < 15; i++ )
-                gameBoard.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            for ( int i = 0; i < gameBoard.RowCount; i++ )
-                for ( int j = 0; j < gameBoard.ColumnCount; j++ )
-                    gameBoard[j, i].Value = GamePieces[0];
+            setPermission ( position == 1 ? true : false );
         }
 
         void con_OnExceptionRaised ( object sender, ExceptionRaiseEventArgs args ) {
             if ( con != null )
-                con.send ( Encoding.Unicode.GetBytes ( "0GE_" + hostPlayer.Text ) );
+                con.send ( Encoding.Unicode.GetBytes ( "0GE_" + myName ) );
             if ( step2_inst != null )
                 step2_inst.Show ();
             this.Hide ();
@@ -94,26 +96,27 @@ namespace Client {
             // move received
             if ( text.StartsWith ( "0GM_" ) ) {
                 string[] tmp = text.Substring ( 4 ).Split ( new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries );
-                if ( tmp[0].Equals ( hostPlayer.Text ) && !tmp[3].Equals ( myColor.ToString () ) ) { // thisGame && !myMove
-                    gameBoard[int.Parse ( tmp[1] ), int.Parse ( tmp[2] )].Value = GamePieces[UInt64.Parse ( tmp[3] )];
-                    setPermission ( true );
+                if ( tmp[0].Equals ( myName ) ) { // myCard
+                    pb[myCardPos++].Image =
+                        Image.FromFile ( Directory.GetCurrentDirectory () + @"\Cards\Card_" + int.Parse ( tmp[1] ).ToString () + @".bmp" );
+                } else if ( tmp[0].Equals ( opponentName ) ) { // opCard
+                    pb[opponentCardPos++].Image =
+                        Image.FromFile ( Directory.GetCurrentDirectory () + @"\Cards\Card_" + int.Parse ( tmp[1] ).ToString () + @".bmp" );
                 }
             }
 
             // reset game
-            else if ( text.StartsWith ( "0GR_" ) && text.Substring(4).Equals(hostPlayer.Text) ) {
-                for ( int i = 0; i < gameBoard.RowCount; i++ )
-                    for ( int j = 0; j < gameBoard.ColumnCount; j++ )
-                        gameBoard[j, i].Value = GamePieces[0];
-                if ( myName.Equals ( hostPlayer.Text ) )
+            else if ( text.StartsWith ( "0GR_" ) && text.Substring ( 4 ).Equals ( GetHost () ) ) {
+                for ( int i = 0; i < 10; i++ )
+                    pb[i] = null;
+                if ( myName.Equals ( GetHost () ) )
                     setPermission ( true );
                 else setPermission ( false );
             }
 
            // win
            else if ( text.StartsWith ( "0GW_" ) ) {
-                if ( text.Substring ( 4 ).Equals ( hostPlayer.Text )
-                    || text.Substring ( 4 ).Equals ( guestPlayer.Text ) ) {
+                if ( text.Substring ( 4 ).Equals ( GetHost () ) || text.Substring ( 4 ).Equals ( GetGuest () ) ) {
                     setPermission ( false );
                     MessageBox.Show ( text.Substring ( 4 ) + " has won !!" );
                 }
@@ -122,7 +125,7 @@ namespace Client {
            // chat
            else if ( text.StartsWith ( "00C_" ) ) {
                 string[] tmp = text.Substring ( 4 ).Split ( new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries );
-                if ( tmp[0].Equals ( hostPlayer.Text ) || tmp[0].Equals ( guestPlayer.Text ) ) {
+                if ( tmp[0].Equals ( GetHost () ) || tmp[0].Equals ( GetGuest () ) ) {
                     chatOut.Text += Environment.NewLine;
                     chatOut.Text += text.Substring ( 4 );
                 }
@@ -139,28 +142,28 @@ namespace Client {
 
         // return to lobby
         private void btnExit_Click ( object sender, EventArgs e ) {
-            con.send ( Encoding.Unicode.GetBytes ( "0GE_" + hostPlayer.Text ) );
+            con.send ( Encoding.Unicode.GetBytes ( "0GE_" + GetHost () ) );
             step2_inst.Show ();
             this.Hide ();
         }
 
-        // make a move
-        private void gameBoard_CellContentClick ( object sender, DataGridViewCellEventArgs e ) {
-            if ( canPlay == true && gameBoard[e.ColumnIndex, e.RowIndex].Value.Equals ( GamePieces[0] ) ) {
-                setPermission ( false );
-                gameBoard[e.ColumnIndex, e.RowIndex].Value = GamePieces[myColor];
-                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + myName + ";" + e.ColumnIndex + ";" + e.RowIndex + ";" + myColor ) );
-            }
-        }
+        //// make a move
+        //private void gameBoard_CellContentClick ( object sender, DataGridViewCellEventArgs e ) {
+        //    if ( canPlay == true && gameBoard[e.ColumnIndex, e.RowIndex].Value.Equals ( GamePieces[0] ) ) {
+        //        setPermission ( false );
+        //        gameBoard[e.ColumnIndex, e.RowIndex].Value = GamePieces[myPosition];
+        //        con.send ( Encoding.Unicode.GetBytes ( "0GM_" + myName + ";" + e.ColumnIndex + ";" + e.RowIndex + ";" + myPosition ) );
+        //    }
+        //}
 
         // make a move
-        private void gameBoard_CellContentDoubleClick ( object sender, DataGridViewCellEventArgs e ) {
-            gameBoard_CellContentClick ( sender, e );
-        }
+        //private void gameBoard_CellContentDoubleClick ( object sender, DataGridViewCellEventArgs e ) {
+        //    gameBoard_CellContentClick ( sender, e );
+        //}
 
         // reset table
         private void btnReset_Click ( object sender, EventArgs e ) {
-            con.send ( Encoding.Unicode.GetBytes ( "0GR_" + hostPlayer.Text ) );
+            con.send ( Encoding.Unicode.GetBytes ( "0GR_" + GetHost () ) );
         }
     }
 }

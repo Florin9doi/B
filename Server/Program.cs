@@ -15,24 +15,56 @@ namespace Server {
         public struct GameStruct {
             public UInt64 gameNr;
             public String player1, player2;
-            public UInt64 status;
-            public Byte[,] gameBoard;
+            public bool stand1, stand2;
+            public UInt64 who;
+            public UInt64 cardMax;
+            public UInt64[] cardsArray;
+            Random rnd;
 
-            public GameStruct ( UInt64 gameNr, string player1, UInt16 status ) {
+            public GameStruct ( UInt64 gameNr, string player1, UInt16 who ) {
                 this.gameNr = gameNr;
                 this.player1 = player1;
                 this.player2 = "";
-                this.status = status;
-                gameBoard = new Byte[15, 15];
+                stand1 = false;
+                stand2 = false;
+                this.who = who;
+                cardMax = 52;
+                cardsArray = new UInt64[53];
+                rnd = new Random ();
             }
 
             public GameStruct ( UInt64 gameNr, string player1, string player2, UInt16 status ) {
                 this.gameNr = gameNr;
                 this.player1 = player1;
                 this.player2 = player2;
-                this.status = status;
-                gameBoard = new Byte[15, 15];
+                stand1 = false;
+                stand2 = false;
+                this.who = status;
+                cardMax = 52;
+                cardsArray = new UInt64[53];
+                rnd = new Random ();
+                for ( UInt64 i = 0; i < cardMax; i++ ) cardsArray[i] = i;
             }
+
+            public UInt64 GetCard () {
+                if ( cardMax > 0 ) {
+                    UInt64 retPos = (UInt64)rnd.Next ( 0, (int)cardMax );
+                    UInt64 returnCard = cardsArray[retPos];
+                    cardMax--;
+                    cardsArray[retPos] = cardsArray[cardMax];
+                    return returnCard;
+                    //if ( returnCard >= 0 && returnCard <= 12 )
+                    //    return "A;" + returnCard;
+                    //if ( returnCard >= 13 && returnCard <= 25 )
+                    //    return "B;" + returnCard;
+                    //if ( returnCard >= 26 && returnCard <= 38 )
+                    //    return "C;" + returnCard;
+                    //if ( returnCard >= 39 && returnCard <= 51 )
+                    //    return "D;" + returnCard;
+                }
+                return 0;
+            }
+
         }
         private static UInt64 nrOfGame = 0;
         private static Dictionary<string, UInt64> gamePointer = new Dictionary<string, UInt64> ();
@@ -63,7 +95,7 @@ namespace Server {
             // list games
             if ( text.StartsWith ( "0GL" ) ) {
                 foreach ( var game in gameRooms ) {
-                    con.sendBySpecificSocket ( Encoding.Unicode.GetBytes ( "0GH_" + game.Value.player1 + ";" + game.Value.status ), args.remoteSock );
+                    con.sendBySpecificSocket ( Encoding.Unicode.GetBytes ( "0GH_" + game.Value.player1 + ";" + game.Value.who ), args.remoteSock );
                 }
             }
 
@@ -76,7 +108,7 @@ namespace Server {
                 gamePointer.Add ( player1, nrOfGame );
 
                 /* register new game */
-                con.send ( Encoding.Unicode.GetBytes ( "0GH_" + gameRooms[nrOfGame].player1 + ";" + gameRooms[nrOfGame].status ) );
+                con.send ( Encoding.Unicode.GetBytes ( "0GH_" + gameRooms[nrOfGame].player1 + ";" + gameRooms[nrOfGame].who ) );
                 nrOfGame++;
             }
 
@@ -92,6 +124,9 @@ namespace Server {
                 //start games
                 con.send ( Encoding.Unicode.GetBytes ( "0GS_" + player[0] + ";" + 1 ) );
                 con.send ( Encoding.Unicode.GetBytes ( "0GJ_" + player[0] + ";" + player[1] ) );
+                System.Threading.Thread.Sleep ( 50 );
+                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + player[0] + ";" + gameRooms[gamePointer[player[0]]].GetCard () ) );
+                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + player[1] + ";" + gameRooms[gamePointer[player[1]]].GetCard () ) );
             }
 
             // exit game
@@ -110,11 +145,13 @@ namespace Server {
             //reset game
             else if ( text.StartsWith ( "0GR_" ) ) {
                 string game = text.Substring ( 4 );
-                
+
                 UInt64 nrOfGame = gamePointer[game];
                 gameRooms[nrOfGame] = new GameStruct ( nrOfGame, gameRooms[nrOfGame].player1, gameRooms[nrOfGame].player2, 1 );
 
                 con.send ( Encoding.Unicode.GetBytes ( text ) );
+                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + gameRooms[nrOfGame].player1 + ";" + gameRooms[nrOfGame].GetCard () ) );
+                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + gameRooms[nrOfGame].player2 + ";" + gameRooms[nrOfGame].GetCard () ) );
             }
 
             // chat
@@ -124,57 +161,55 @@ namespace Server {
             }
 
             // game move
-            else if ( text.StartsWith ( "0GM_" ) ) {
-                string[] tmp = text.Substring ( 4 ).Split ( new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries );
+                //else if ( text.StartsWith ( "0GM_" ) ) {
+                //    string[] tmp = text.Substring ( 4 ).Split ( new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries );
 
-                int x = int.Parse ( tmp[1] );
-                int y = int.Parse ( tmp[2] );
-                Byte c = Byte.Parse ( tmp[3] );
+            //    int x = int.Parse ( tmp[1] );
+                //    int y = int.Parse ( tmp[2] );
+                //    Byte c = Byte.Parse ( tmp[3] );
 
-                if ( gameRooms[gamePointer[tmp[0]]].status == UInt64.Parse ( tmp[3] ) ) { // right player
-                    Console.WriteLine ( tmp[0] + " has choosed [" + x + "," + y + "]" );
-                    gameRooms[gamePointer[tmp[0]]].gameBoard[x, y] = c;
+            //    if ( gameRooms[gamePointer[tmp[0]]].status == UInt64.Parse ( tmp[3] ) ) { // right player
+                //        Console.WriteLine ( tmp[0] + " has choosed [" + x + "," + y + "]" );
+                //        gameRooms[gamePointer[tmp[0]]].gameBoard[x, y] = c;
 
-                    con.send ( Encoding.Unicode.GetBytes ( "0GM_" + gameRooms[gamePointer[tmp[0]]].player1
-                        + ";" + tmp[1] + ";" + tmp[2] + ";" + tmp[3] ) );
+            //        con.send ( Encoding.Unicode.GetBytes ( "0GM_" + gameRooms[gamePointer[tmp[0]]].player1
+                //            + ";" + tmp[1] + ";" + tmp[2] + ";" + tmp[3] ) );
 
-                    // check wins
-                    bool win = false;
-                    int same = 0;
-                    for ( int i = Math.Max ( 0, x - 4 ); i < Math.Min ( 14, x + 4 ) && win == false; i++ ) {
-                        if ( gameRooms[gamePointer[tmp[0]]].gameBoard[i, y] == gameRooms[gamePointer[tmp[0]]].gameBoard[i + 1, y]
-                            && gameRooms[gamePointer[tmp[0]]].gameBoard[i, y] == c )
-                            same++;
-                        else same = 0;
+            //        // check wins
+                //        bool win = false;
+                //        int same = 0;
+                //        for ( int i = Math.Max ( 0, x - 4 ); i < Math.Min ( 14, x + 4 ) && win == false; i++ ) {
+                //            if ( gameRooms[gamePointer[tmp[0]]].gameBoard[i, y] == gameRooms[gamePointer[tmp[0]]].gameBoard[i + 1, y]
+                //                && gameRooms[gamePointer[tmp[0]]].gameBoard[i, y] == c )
+                //                same++;
+                //            else same = 0;
 
-                        if ( same >= 4 )
-                            win = true;
-                    }
+            //            if ( same >= 4 )
+                //                win = true;
+                //        }
 
-                    same = 0;
-                    for ( int i = Math.Max ( 0, y - 4 ); i < Math.Min ( 14, y + 4 ) && win == false; i++ ) {
-                        if ( gameRooms[gamePointer[tmp[0]]].gameBoard[x, i] == gameRooms[gamePointer[tmp[0]]].gameBoard[x, i + 1]
-                            && gameRooms[gamePointer[tmp[0]]].gameBoard[x, i] == c )
-                            same++;
-                        else same = 0;
+            //        same = 0;
+                //        for ( int i = Math.Max ( 0, y - 4 ); i < Math.Min ( 14, y + 4 ) && win == false; i++ ) {
+                //            if ( gameRooms[gamePointer[tmp[0]]].gameBoard[x, i] == gameRooms[gamePointer[tmp[0]]].gameBoard[x, i + 1]
+                //                && gameRooms[gamePointer[tmp[0]]].gameBoard[x, i] == c )
+                //                same++;
+                //            else same = 0;
 
-                        if ( same >= 4 )
-                            win = true;
-                    }
+            //            if ( same >= 4 )
+                //                win = true;
+                //        }
 
-                    // DIAGONAL CHECKS WILL BE ADDED IN VERSION 2.0
-                    // maybe :D
-
-                    if ( win ) {
-                        con.send ( Encoding.Unicode.GetBytes ( "0GW_" + tmp[0] ) );
-                        Console.WriteLine ( tmp[0] + " has won !!" );
-                    } else {
-                        GameStruct g = gameRooms[gamePointer[tmp[0]]];
-                        g.status = int.Parse ( tmp[3] ) == 1 ? (UInt64)2 : (UInt64)1;
-                        gameRooms[gamePointer[tmp[0]]] = g;
-                    }
-                }
-            } else {
+            //        if ( win ) {
+                //            con.send ( Encoding.Unicode.GetBytes ( "0GW_" + tmp[0] ) );
+                //            Console.WriteLine ( tmp[0] + " has won !!" );
+                //        } else {
+                //            GameStruct g = gameRooms[gamePointer[tmp[0]]];
+                //            g.status = int.Parse ( tmp[3] ) == 1 ? (UInt64)2 : (UInt64)1;
+                //            gameRooms[gamePointer[tmp[0]]] = g;
+                //        }
+                //    }
+                //} 
+            else {
                 Console.WriteLine ( text );
             }
         }

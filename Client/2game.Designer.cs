@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.chatOut = new System.Windows.Forms.TextBox();
             this.chatAdd = new System.Windows.Forms.TextBox();
-            this.gameBoard = new System.Windows.Forms.DataGridView();
             this.btnExit = new System.Windows.Forms.Button();
             this.player1card1 = new System.Windows.Forms.PictureBox();
             this.player1card2 = new System.Windows.Forms.PictureBox();
@@ -43,12 +43,9 @@
             this.player2card2 = new System.Windows.Forms.PictureBox();
             this.player2card1 = new System.Windows.Forms.PictureBox();
             this.backCard = new System.Windows.Forms.PictureBox();
-            this.hostPlayer = new System.Windows.Forms.Label();
-            this.guestPlayer = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.gameBoard)).BeginInit();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.player1card1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.player1card2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.player1card3)).BeginInit();
@@ -79,23 +76,6 @@
             this.chatAdd.Size = new System.Drawing.Size(139, 20);
             this.chatAdd.TabIndex = 20;
             this.chatAdd.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyUp);
-            // 
-            // gameBoard
-            // 
-            this.gameBoard.AllowUserToAddRows = false;
-            this.gameBoard.AllowUserToDeleteRows = false;
-            this.gameBoard.AllowUserToResizeColumns = false;
-            this.gameBoard.AllowUserToResizeRows = false;
-            this.gameBoard.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gameBoard.ColumnHeadersVisible = false;
-            this.gameBoard.Location = new System.Drawing.Point(541, 74);
-            this.gameBoard.Name = "gameBoard";
-            this.gameBoard.RowHeadersVisible = false;
-            this.gameBoard.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.gameBoard.Size = new System.Drawing.Size(137, 136);
-            this.gameBoard.TabIndex = 0;
-            this.gameBoard.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gameBoard_CellContentClick);
-            this.gameBoard.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gameBoard_CellContentDoubleClick);
             // 
             // btnExit
             // 
@@ -206,42 +186,6 @@
             this.backCard.TabIndex = 35;
             this.backCard.TabStop = false;
             // 
-            // hostPlayer
-            // 
-            this.hostPlayer.BackColor = System.Drawing.Color.Green;
-            this.hostPlayer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.hostPlayer.ForeColor = System.Drawing.Color.White;
-            this.hostPlayer.Location = new System.Drawing.Point(541, 11);
-            this.hostPlayer.Name = "hostPlayer";
-            this.hostPlayer.Size = new System.Drawing.Size(66, 23);
-            this.hostPlayer.TabIndex = 15;
-            this.hostPlayer.Text = "Player 1";
-            this.hostPlayer.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // guestPlayer
-            // 
-            this.guestPlayer.BackColor = System.Drawing.Color.Green;
-            this.guestPlayer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.guestPlayer.ForeColor = System.Drawing.Color.White;
-            this.guestPlayer.Location = new System.Drawing.Point(614, 11);
-            this.guestPlayer.Name = "guestPlayer";
-            this.guestPlayer.Size = new System.Drawing.Size(65, 23);
-            this.guestPlayer.TabIndex = 16;
-            this.guestPlayer.Text = "Player 2";
-            this.guestPlayer.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label4
-            // 
-            this.label4.BackColor = System.Drawing.Color.DarkGoldenrod;
-            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(542, 41);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(137, 23);
-            this.label4.TabIndex = 22;
-            this.label4.Text = "Chat Box";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(243, 318);
@@ -260,11 +204,16 @@
             this.button2.Text = "button2";
             this.button2.UseVisualStyleBackColor = true;
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
             // game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(683, 360);
+            this.ClientSize = new System.Drawing.Size(548, 360);
             this.ControlBox = false;
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -280,16 +229,11 @@
             this.Controls.Add(this.player1card2);
             this.Controls.Add(this.player1card1);
             this.Controls.Add(this.btnExit);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.chatOut);
             this.Controls.Add(this.chatAdd);
-            this.Controls.Add(this.guestPlayer);
-            this.Controls.Add(this.hostPlayer);
-            this.Controls.Add(this.gameBoard);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "game";
             this.Text = "Blackjack";
-            ((System.ComponentModel.ISupportInitialize)(this.gameBoard)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.player1card1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.player1card2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.player1card3)).EndInit();
@@ -310,7 +254,6 @@
 
         private System.Windows.Forms.TextBox chatOut;
         private System.Windows.Forms.TextBox chatAdd;
-        private System.Windows.Forms.DataGridView gameBoard;
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.PictureBox player1card1;
         private System.Windows.Forms.PictureBox player1card2;
@@ -323,11 +266,9 @@
         private System.Windows.Forms.PictureBox player2card2;
         private System.Windows.Forms.PictureBox player2card1;
         private System.Windows.Forms.PictureBox backCard;
-        private System.Windows.Forms.Label hostPlayer;
-        private System.Windows.Forms.Label guestPlayer;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }
 

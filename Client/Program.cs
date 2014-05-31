@@ -9,17 +9,14 @@ using System.IO;
 
 
 // 2do: verifica dace serverul e online !!! (linia 32+)
-namespace Client
-{
-    static class Program
-    {
+namespace Client {
+    static class Program {
         [STAThread]
-        static void Main()
-        {
-            Application.EnableVisualStyles();
+        static void Main () {
+            Application.EnableVisualStyles ();
             Application.SetCompatibleTextRenderingDefault ( false );
-            //Application.Run ( new step1_con () );
-            Application.Run ( new game () );
+            Application.Run ( new lobby () );
+            //Application.Run ( new game () );
         }
     }
 }
