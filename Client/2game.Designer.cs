@@ -46,6 +46,7 @@
             this.btnStand = new System.Windows.Forms.Button();
             this.btnHit = new System.Windows.Forms.Button();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.btnReset = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.player1card1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.player1card2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.player1card3)).BeginInit();
@@ -191,7 +192,7 @@
             // btnStand
             // 
             this.btnStand.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.btnStand.Location = new System.Drawing.Point(243, 318);
+            this.btnStand.Location = new System.Drawing.Point(166, 318);
             this.btnStand.Name = "btnStand";
             this.btnStand.Size = new System.Drawing.Size(148, 32);
             this.btnStand.TabIndex = 36;
@@ -216,6 +217,17 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
+            // btnReset
+            // 
+            this.btnReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.btnReset.Location = new System.Drawing.Point(320, 318);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(71, 32);
+            this.btnReset.TabIndex = 38;
+            this.btnReset.Text = "Restart";
+            this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
+            // 
             // game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -223,6 +235,7 @@
             this.BackColor = System.Drawing.Color.SeaGreen;
             this.ClientSize = new System.Drawing.Size(548, 360);
             this.ControlBox = false;
+            this.Controls.Add(this.btnReset);
             this.Controls.Add(this.btnHit);
             this.Controls.Add(this.btnStand);
             this.Controls.Add(this.backCard);
@@ -277,6 +290,7 @@
         private System.Windows.Forms.Button btnStand;
         private System.Windows.Forms.Button btnHit;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.Button btnReset;
     }
 }
 

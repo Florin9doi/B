@@ -130,14 +130,12 @@ namespace Client {
             }
         }
 
-        // join game
-        private void btnJoin_Click ( object sender, EventArgs e ) {
-        }
-
+        // exit game
         private void btnExit_Click ( object sender, EventArgs e ) {
             Application.Exit ();
         }
 
+        // join game
         private void gameList_CellMouseDoubleClick ( object sender, DataGridViewCellMouseEventArgs e ) {
             if ( gameList.SelectedRows.Count == 1 // !outOfRange
                 && gameList[1, gameList.CurrentCell.RowIndex].Value.Equals ( GameStatus[0] )  // available

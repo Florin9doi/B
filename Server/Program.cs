@@ -17,6 +17,7 @@ namespace Server {
             public UInt64 who;
             public String player1, player2;
             public bool stand1, stand2;
+            public UInt64 p1Score, p2Score;
 
             public UInt64 cardMax;
             public UInt64[] cardsArray;
@@ -29,6 +30,7 @@ namespace Server {
                 this.player2 = "";
                 stand1 = false;
                 stand2 = false;
+                p1Score = 0; p2Score = 0;
                 cardMax = 52;
                 cardsArray = new UInt64[53];
                 rnd = new Random ();
@@ -41,28 +43,53 @@ namespace Server {
                 this.player2 = player2;
                 stand1 = false;
                 stand2 = false;
+                p1Score = 0; p2Score = 0;
                 cardMax = 52;
                 cardsArray = new UInt64[53];
                 rnd = new Random ();
                 for ( UInt64 i = 0; i < cardMax; i++ ) cardsArray[i] = i;
             }
 
-            public UInt64 GetCard () {
+            // get a random card
+            public UInt64 GetCard ( UInt64 player ) {
                 if ( cardMax > 0 ) {
                     UInt64 retPos = (UInt64)rnd.Next ( 0, (int)cardMax );
                     UInt64 returnCard = cardsArray[retPos];
                     cardMax--;
                     cardsArray[retPos] = cardsArray[cardMax];
+                    AddPoints ( player, returnCard );
                     return returnCard;
                 }
                 return 0;
             }
 
-            public void SetStand ( UInt64 who, bool state ) {
-                if ( who == 1 )
+            // player choosed to stand
+            public void SetStand ( UInt64 player, bool state ) {
+                if ( player == 1 )
                     stand1 = state;
-                else if ( who == 2 )
+                else if ( player == 2 )
                     stand2 = state;
+            }
+
+            // player choosed to stand
+            public void AddPoints ( UInt64 player, UInt64 card ) {
+
+                // calc
+                UInt64 sc = 0;
+                if ( card % 13 == 0 )
+                    sc = 11;
+                else if ( card % 13 >= 1 && card % 13 <= 9 )
+                    sc = card % 13 + 1;
+                else if ( card % 13 >= 10 && card % 13 <= 12 )
+                    sc = 10;
+
+                // add
+                if ( player == 1 )
+                    p1Score = p1Score + sc;
+                else if ( player == 2 )
+                    p2Score = p2Score + sc;
+
+                Console.WriteLine ( player1 + " have " + p1Score + "pts; " + player2 + " have " + p2Score + "pts" );
             }
 
         }
@@ -123,8 +150,8 @@ namespace Server {
 
                 //start games
                 con.send ( Encoding.Unicode.GetBytes ( "0GS_" + player[0] + ";" + 1 ) );
-                con.send ( Encoding.Unicode.GetBytes ( "0GJ_" + player[0] + ";" + gameRooms[gamePointer[player[0]]].GetCard () + ";"
-                                                              + player[1] + ";" + gameRooms[gamePointer[player[1]]].GetCard () ) );
+                con.send ( Encoding.Unicode.GetBytes ( "0GJ_" + player[0] + ";" + gameRooms[gamePointer[player[0]]].GetCard ( 1 ) + ";"
+                                                              + player[1] + ";" + gameRooms[gamePointer[player[1]]].GetCard ( 2 ) ) );
             }
 
             // exit game
@@ -148,8 +175,8 @@ namespace Server {
                 gameRooms[nrOfGame] = new GameStruct ( nrOfGame, gameRooms[nrOfGame].player1, gameRooms[nrOfGame].player2, 1 );
 
                 con.send ( Encoding.Unicode.GetBytes ( text ) );
-                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + gameRooms[nrOfGame].player1 + ";" + gameRooms[nrOfGame].GetCard () ) );
-                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + gameRooms[nrOfGame].player2 + ";" + gameRooms[nrOfGame].GetCard () ) );
+                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + gameRooms[nrOfGame].player1 + ";" + gameRooms[nrOfGame].GetCard ( 1 ) ) );
+                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + gameRooms[nrOfGame].player2 + ";" + gameRooms[nrOfGame].GetCard ( 2 ) ) );
             }
 
             // chat
@@ -158,15 +185,6 @@ namespace Server {
                 con.send ( Encoding.Unicode.GetBytes ( "00C_" + text.Substring ( 4 ) ) );
             }
 
-                    //if ( returnCard >= 0 && returnCard <= 12 )
-                //    return "A;" + returnCard;
-                //if ( returnCard >= 13 && returnCard <= 25 )
-                //    return "B;" + returnCard;
-                //if ( returnCard >= 26 && returnCard <= 38 )
-                //    return "C;" + returnCard;
-                //if ( returnCard >= 39 && returnCard <= 51 )
-                //    return "D;" + returnCard;
-
             // game move
             else if ( text.StartsWith ( "0GM_" ) ) {
                 string[] tmp = text.Substring ( 4 ).Split ( new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries );
@@ -174,8 +192,12 @@ namespace Server {
                 if ( gameRooms[gamePointer[tmp[0]]].who == UInt64.Parse ( tmp[1] ) ) { // right player
                     if ( UInt64.Parse ( tmp[2] ) == 0 ) { // stand
                         gameRooms[gamePointer[tmp[0]]].SetStand ( UInt64.Parse ( tmp[1] ), true );
+                        con.send ( Encoding.Unicode.GetBytes ( "0GM_" + tmp[0] + ";" + "-1" ) );
                         Console.WriteLine ( tmp[0] + " has choosed to stand" );
                     } else if ( UInt64.Parse ( tmp[2] ) == 1 ) { // hit
+                        UInt64 card = gameRooms[gamePointer[tmp[0]]].GetCard ( UInt64.Parse ( tmp[1] ) );
+                        gameRooms[gamePointer[tmp[0]]].AddPoints ( UInt64.Parse ( tmp[1] ), card );
+                        con.send ( Encoding.Unicode.GetBytes ( "0GM_" + tmp[0] + ";" + card ) );
                         Console.WriteLine ( tmp[0] + " has choosed to hit" );
                     }
                 }

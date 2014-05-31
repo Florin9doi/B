@@ -65,8 +65,10 @@ namespace Client {
             pb[8] = player2card4;
             pb[9] = player2card5;
             backCard.Image = Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\back.bmp" );
-            pb[myCardPos++].Image = Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + hostCard + @".bmp" );
-            pb[opponentCardPos++].Image = Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + guestCard + @".bmp" );
+            pb[myCardPos++].Image = Image.FromFile ( Directory.GetCurrentDirectory ()
+                + @"\Imagini\Card_" + ( position == 1 ? hostCard : guestCard ) + @".bmp" );
+            pb[opponentCardPos++].Image = Image.FromFile ( Directory.GetCurrentDirectory ()
+                + @"\Imagini\Card_" + ( position == 1 ? guestCard : hostCard ) + @".bmp" );
 
             this.con = con;
             con.OnExceptionRaised += con_OnExceptionRaised;
@@ -96,25 +98,25 @@ namespace Client {
 
         private void ReceieveMessage ( string text ) {
 
-            chatOut.Text += Environment.NewLine;
-            chatOut.Text += text;
-
             // move received
             if ( text.StartsWith ( "0GM_" ) ) {
-                string[] tmp = text.Substring ( 4 ).Split ( new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries );
-                if ( tmp[0].Equals ( myName ) ) { // myCard
-                    pb[myCardPos++].Image =
-                        Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + int.Parse ( tmp[1] ).ToString () + @".bmp" );
-                } else if ( tmp[0].Equals ( opponentName ) ) { // opCard
-                    pb[opponentCardPos++].Image =
-                        Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + int.Parse ( tmp[1] ).ToString () + @".bmp" );
+                string[] moves = text.Split ( new string[] { "0GM_" }, StringSplitOptions.RemoveEmptyEntries );
+                foreach ( string move in moves ) {
+                    string[] tmp = move.Split ( new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries );
+                    if ( tmp[0].Equals ( myName ) ) { // myCard
+                        pb[myCardPos++].Image =
+                            Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + int.Parse ( tmp[1] ).ToString () + @".bmp" );
+                    } else if ( tmp[0].Equals ( opponentName ) ) { // oponentCard
+                        pb[opponentCardPos++].Image =
+                            Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + int.Parse ( tmp[1] ).ToString () + @".bmp" );
+                    }
                 }
             }
 
             // reset game
             else if ( text.StartsWith ( "0GR_" ) && text.Substring ( 4 ).Equals ( GetHost () ) ) {
                 for ( int i = 0; i < 10; i++ )
-                    pb[i] = null;
+                    pb[i].Image = null;
                 myCardPos = 0;
                 opponentCardPos = 5;
                 if ( myName.Equals ( GetHost () ) )
@@ -166,7 +168,6 @@ namespace Client {
             setPermission ( false );
             con.send ( Encoding.Unicode.GetBytes ( "0GM_" + myName + ";" + myPosition + ";" + 0 ) );
         }
-
 
         // Hit
         private void btnHit_Click ( object sender, EventArgs e ) {
