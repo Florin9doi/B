@@ -43,8 +43,8 @@
             this.player2card2 = new System.Windows.Forms.PictureBox();
             this.player2card1 = new System.Windows.Forms.PictureBox();
             this.backCard = new System.Windows.Forms.PictureBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btnStand = new System.Windows.Forms.Button();
+            this.btnHit = new System.Windows.Forms.Button();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.player1card1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.player1card2)).BeginInit();
@@ -61,6 +61,7 @@
             // 
             // chatOut
             // 
+            this.chatOut.BackColor = System.Drawing.Color.White;
             this.chatOut.Location = new System.Drawing.Point(397, 12);
             this.chatOut.Multiline = true;
             this.chatOut.Name = "chatOut";
@@ -79,6 +80,7 @@
             // 
             // btnExit
             // 
+            this.btnExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.btnExit.Location = new System.Drawing.Point(397, 318);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(139, 32);
@@ -90,7 +92,7 @@
             // player1card1
             // 
             this.player1card1.InitialImage = null;
-            this.player1card1.Location = new System.Drawing.Point(12, 12);
+            this.player1card1.Location = new System.Drawing.Point(12, 216);
             this.player1card1.Name = "player1card1";
             this.player1card1.Size = new System.Drawing.Size(71, 96);
             this.player1card1.TabIndex = 25;
@@ -99,7 +101,7 @@
             // player1card2
             // 
             this.player1card2.InitialImage = null;
-            this.player1card2.Location = new System.Drawing.Point(89, 12);
+            this.player1card2.Location = new System.Drawing.Point(89, 216);
             this.player1card2.Name = "player1card2";
             this.player1card2.Size = new System.Drawing.Size(71, 96);
             this.player1card2.TabIndex = 26;
@@ -108,7 +110,7 @@
             // player1card3
             // 
             this.player1card3.InitialImage = null;
-            this.player1card3.Location = new System.Drawing.Point(166, 12);
+            this.player1card3.Location = new System.Drawing.Point(166, 216);
             this.player1card3.Name = "player1card3";
             this.player1card3.Size = new System.Drawing.Size(71, 96);
             this.player1card3.TabIndex = 27;
@@ -117,7 +119,7 @@
             // player1card4
             // 
             this.player1card4.InitialImage = null;
-            this.player1card4.Location = new System.Drawing.Point(243, 12);
+            this.player1card4.Location = new System.Drawing.Point(243, 216);
             this.player1card4.Name = "player1card4";
             this.player1card4.Size = new System.Drawing.Size(71, 96);
             this.player1card4.TabIndex = 28;
@@ -126,7 +128,7 @@
             // player1card5
             // 
             this.player1card5.InitialImage = null;
-            this.player1card5.Location = new System.Drawing.Point(320, 12);
+            this.player1card5.Location = new System.Drawing.Point(320, 216);
             this.player1card5.Name = "player1card5";
             this.player1card5.Size = new System.Drawing.Size(71, 96);
             this.player1card5.TabIndex = 29;
@@ -135,7 +137,7 @@
             // player2card5
             // 
             this.player2card5.InitialImage = null;
-            this.player2card5.Location = new System.Drawing.Point(320, 216);
+            this.player2card5.Location = new System.Drawing.Point(320, 12);
             this.player2card5.Name = "player2card5";
             this.player2card5.Size = new System.Drawing.Size(71, 96);
             this.player2card5.TabIndex = 34;
@@ -144,7 +146,7 @@
             // player2card4
             // 
             this.player2card4.InitialImage = null;
-            this.player2card4.Location = new System.Drawing.Point(243, 216);
+            this.player2card4.Location = new System.Drawing.Point(243, 12);
             this.player2card4.Name = "player2card4";
             this.player2card4.Size = new System.Drawing.Size(71, 96);
             this.player2card4.TabIndex = 33;
@@ -153,7 +155,7 @@
             // player2card3
             // 
             this.player2card3.InitialImage = null;
-            this.player2card3.Location = new System.Drawing.Point(166, 216);
+            this.player2card3.Location = new System.Drawing.Point(166, 12);
             this.player2card3.Name = "player2card3";
             this.player2card3.Size = new System.Drawing.Size(71, 96);
             this.player2card3.TabIndex = 32;
@@ -162,7 +164,7 @@
             // player2card2
             // 
             this.player2card2.InitialImage = null;
-            this.player2card2.Location = new System.Drawing.Point(89, 216);
+            this.player2card2.Location = new System.Drawing.Point(89, 12);
             this.player2card2.Name = "player2card2";
             this.player2card2.Size = new System.Drawing.Size(71, 96);
             this.player2card2.TabIndex = 31;
@@ -171,7 +173,7 @@
             // player2card1
             // 
             this.player2card1.InitialImage = null;
-            this.player2card1.Location = new System.Drawing.Point(12, 216);
+            this.player2card1.Location = new System.Drawing.Point(12, 12);
             this.player2card1.Name = "player2card1";
             this.player2card1.Size = new System.Drawing.Size(71, 96);
             this.player2card1.TabIndex = 30;
@@ -186,23 +188,26 @@
             this.backCard.TabIndex = 35;
             this.backCard.TabStop = false;
             // 
-            // button1
+            // btnStand
             // 
-            this.button1.Location = new System.Drawing.Point(243, 318);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(148, 32);
-            this.button1.TabIndex = 36;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnStand.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.btnStand.Location = new System.Drawing.Point(243, 318);
+            this.btnStand.Name = "btnStand";
+            this.btnStand.Size = new System.Drawing.Size(148, 32);
+            this.btnStand.TabIndex = 36;
+            this.btnStand.Text = "Stand";
+            this.btnStand.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // btnHit
             // 
-            this.button2.Location = new System.Drawing.Point(12, 318);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(148, 32);
-            this.button2.TabIndex = 37;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnHit.BackColor = System.Drawing.Color.Transparent;
+            this.btnHit.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.btnHit.Location = new System.Drawing.Point(12, 318);
+            this.btnHit.Name = "btnHit";
+            this.btnHit.Size = new System.Drawing.Size(148, 32);
+            this.btnHit.TabIndex = 37;
+            this.btnHit.Text = "HIT";
+            this.btnHit.UseVisualStyleBackColor = false;
             // 
             // contextMenuStrip1
             // 
@@ -213,10 +218,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.SeaGreen;
             this.ClientSize = new System.Drawing.Size(548, 360);
             this.ControlBox = false;
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnHit);
+            this.Controls.Add(this.btnStand);
             this.Controls.Add(this.backCard);
             this.Controls.Add(this.player2card5);
             this.Controls.Add(this.player2card4);
@@ -266,8 +272,8 @@
         private System.Windows.Forms.PictureBox player2card2;
         private System.Windows.Forms.PictureBox player2card1;
         private System.Windows.Forms.PictureBox backCard;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnStand;
+        private System.Windows.Forms.Button btnHit;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }

@@ -53,14 +53,6 @@ namespace Server {
                     cardMax--;
                     cardsArray[retPos] = cardsArray[cardMax];
                     return returnCard;
-                    //if ( returnCard >= 0 && returnCard <= 12 )
-                    //    return "A;" + returnCard;
-                    //if ( returnCard >= 13 && returnCard <= 25 )
-                    //    return "B;" + returnCard;
-                    //if ( returnCard >= 26 && returnCard <= 38 )
-                    //    return "C;" + returnCard;
-                    //if ( returnCard >= 39 && returnCard <= 51 )
-                    //    return "D;" + returnCard;
                 }
                 return 0;
             }
@@ -123,10 +115,8 @@ namespace Server {
 
                 //start games
                 con.send ( Encoding.Unicode.GetBytes ( "0GS_" + player[0] + ";" + 1 ) );
-                con.send ( Encoding.Unicode.GetBytes ( "0GJ_" + player[0] + ";" + player[1] ) );
-                System.Threading.Thread.Sleep ( 50 );
-                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + player[0] + ";" + gameRooms[gamePointer[player[0]]].GetCard () ) );
-                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + player[1] + ";" + gameRooms[gamePointer[player[1]]].GetCard () ) );
+                con.send ( Encoding.Unicode.GetBytes ( "0GJ_" + player[0] + ";" + gameRooms[gamePointer[player[0]]].GetCard () + ";"
+                                                              + player[1] + ";" + gameRooms[gamePointer[player[1]]].GetCard () ) );
             }
 
             // exit game
@@ -159,6 +149,15 @@ namespace Server {
                 Console.WriteLine ( text.Substring ( 4 ) );
                 con.send ( Encoding.Unicode.GetBytes ( "00C_" + text.Substring ( 4 ) ) );
             }
+
+                    //if ( returnCard >= 0 && returnCard <= 12 )
+                //    return "A;" + returnCard;
+                //if ( returnCard >= 13 && returnCard <= 25 )
+                //    return "B;" + returnCard;
+                //if ( returnCard >= 26 && returnCard <= 38 )
+                //    return "C;" + returnCard;
+                //if ( returnCard >= 39 && returnCard <= 51 )
+                //    return "D;" + returnCard;
 
             // game move
                 //else if ( text.StartsWith ( "0GM_" ) ) {

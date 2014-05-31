@@ -27,6 +27,8 @@ namespace Client {
 
         private void setPermission ( bool perm ) {
             canPlay = perm;
+            btnHit.Visible = perm;
+            btnStand.Visible = perm;
         }
 
         private string GetHost () {
@@ -45,12 +47,10 @@ namespace Client {
             else return null;
         }
 
-        public game () {
-            InitializeComponent ();
-            backCard.Image = Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\back.bmp" );
-        }
+        public game ( TCPConnection con, lobby step2_inst,
+                        String host, String hostCard,
+                        String guest, String guestCard, UInt16 position ) {
 
-        public game ( TCPConnection con, lobby step2_inst, String host, String guest, UInt16 position ) {
             InitializeComponent ();
 
             pb = new PictureBox[10];
@@ -64,6 +64,9 @@ namespace Client {
             pb[7] = player2card3;
             pb[8] = player2card4;
             pb[9] = player2card5;
+            backCard.Image = Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\back.bmp" );
+            pb[myCardPos++].Image = Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + hostCard + @".bmp" );
+            pb[opponentCardPos++].Image = Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + guestCard + @".bmp" );
 
             this.con = con;
             con.OnExceptionRaised += con_OnExceptionRaised;
@@ -93,15 +96,18 @@ namespace Client {
 
         private void ReceieveMessage ( string text ) {
 
+            chatOut.Text += Environment.NewLine;
+            chatOut.Text += text;
+
             // move received
             if ( text.StartsWith ( "0GM_" ) ) {
                 string[] tmp = text.Substring ( 4 ).Split ( new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries );
                 if ( tmp[0].Equals ( myName ) ) { // myCard
                     pb[myCardPos++].Image =
-                        Image.FromFile ( Directory.GetCurrentDirectory () + @"\Cards\Card_" + int.Parse ( tmp[1] ).ToString () + @".bmp" );
+                        Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + int.Parse ( tmp[1] ).ToString () + @".bmp" );
                 } else if ( tmp[0].Equals ( opponentName ) ) { // opCard
                     pb[opponentCardPos++].Image =
-                        Image.FromFile ( Directory.GetCurrentDirectory () + @"\Cards\Card_" + int.Parse ( tmp[1] ).ToString () + @".bmp" );
+                        Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + int.Parse ( tmp[1] ).ToString () + @".bmp" );
                 }
             }
 
@@ -109,6 +115,8 @@ namespace Client {
             else if ( text.StartsWith ( "0GR_" ) && text.Substring ( 4 ).Equals ( GetHost () ) ) {
                 for ( int i = 0; i < 10; i++ )
                     pb[i] = null;
+                myCardPos = 0;
+                opponentCardPos = 5;
                 if ( myName.Equals ( GetHost () ) )
                     setPermission ( true );
                 else setPermission ( false );
@@ -118,7 +126,8 @@ namespace Client {
            else if ( text.StartsWith ( "0GW_" ) ) {
                 if ( text.Substring ( 4 ).Equals ( GetHost () ) || text.Substring ( 4 ).Equals ( GetGuest () ) ) {
                     setPermission ( false );
-                    MessageBox.Show ( text.Substring ( 4 ) + " has won !!" );
+                    chatOut.Text += Environment.NewLine;
+                    chatOut.Text += text.Substring ( 4 ) + " has won !!";
                 }
             }
 
