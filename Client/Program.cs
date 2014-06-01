@@ -7,8 +7,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 
-
-// 2do: verifica dace serverul e online !!! (linia 32+)
 namespace Client {
     static class Program {
         [STAThread]
@@ -16,7 +14,6 @@ namespace Client {
             Application.EnableVisualStyles ();
             Application.SetCompatibleTextRenderingDefault ( false );
             Application.Run ( new lobby () );
-            //Application.Run ( new game () );
         }
     }
 }

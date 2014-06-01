@@ -12,7 +12,7 @@ namespace Server {
         public const int port = 3000;
         private static TCPConnection con = new TCPConnection ();
 
-        public struct GameStruct {
+        public class GameStruct {
             public UInt64 gameNr;
             public UInt64 who;
             public String player1, player2;
@@ -71,7 +71,7 @@ namespace Server {
                     stand2 = state;
             }
 
-            // player choosed to stand
+            // calc points
             public void AddPoints ( UInt64 player, UInt64 card ) {
 
                 // calc
@@ -92,7 +92,21 @@ namespace Server {
                 Console.WriteLine ( player1 + " have " + p1Score + "pts; " + player2 + " have " + p2Score + "pts" );
             }
 
-        }
+            // get next player
+            public UInt64 GetNext () {
+                if ( who == 1 && stand2 == false )
+                    who = 2;
+                else if ( who == 1 && stand2 == true )
+                    who = 1;
+                else if ( who == 2 && stand1 == false )
+                    who = 1;
+                else if ( who == 2 && stand1 == true )
+                    who = 2;
+                Console.WriteLine ( "Who = " + who );
+                return who;
+            }
+        } // end of GameStruct
+
         private static UInt64 nrOfGame = 0;
         private static Dictionary<string, UInt64> gamePointer = new Dictionary<string, UInt64> ();
         private static Dictionary<UInt64, GameStruct> gameRooms = new Dictionary<UInt64, GameStruct> ();
@@ -175,8 +189,8 @@ namespace Server {
                 gameRooms[nrOfGame] = new GameStruct ( nrOfGame, gameRooms[nrOfGame].player1, gameRooms[nrOfGame].player2, 1 );
 
                 con.send ( Encoding.Unicode.GetBytes ( text ) );
-                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + gameRooms[nrOfGame].player1 + ";" + gameRooms[nrOfGame].GetCard ( 1 ) ) );
-                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + gameRooms[nrOfGame].player2 + ";" + gameRooms[nrOfGame].GetCard ( 2 ) ) );
+                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + gameRooms[nrOfGame].player1 + ";" + gameRooms[nrOfGame].GetCard ( 1 ) + ";" + 1 ) );
+                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + gameRooms[nrOfGame].player2 + ";" + gameRooms[nrOfGame].GetCard ( 2 ) + ";" + 1 ) );
             }
 
             // chat
@@ -188,16 +202,15 @@ namespace Server {
             // game move
             else if ( text.StartsWith ( "0GM_" ) ) {
                 string[] tmp = text.Substring ( 4 ).Split ( new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries );
-
                 if ( gameRooms[gamePointer[tmp[0]]].who == UInt64.Parse ( tmp[1] ) ) { // right player
                     if ( UInt64.Parse ( tmp[2] ) == 0 ) { // stand
                         gameRooms[gamePointer[tmp[0]]].SetStand ( UInt64.Parse ( tmp[1] ), true );
-                        con.send ( Encoding.Unicode.GetBytes ( "0GM_" + tmp[0] + ";" + "-1" ) );
+                        con.send ( Encoding.Unicode.GetBytes ( "0GM_" + tmp[0] + ";" + "-1" + ";" + gameRooms[gamePointer[tmp[0]]].GetNext () ) );
                         Console.WriteLine ( tmp[0] + " has choosed to stand" );
                     } else if ( UInt64.Parse ( tmp[2] ) == 1 ) { // hit
                         UInt64 card = gameRooms[gamePointer[tmp[0]]].GetCard ( UInt64.Parse ( tmp[1] ) );
                         gameRooms[gamePointer[tmp[0]]].AddPoints ( UInt64.Parse ( tmp[1] ), card );
-                        con.send ( Encoding.Unicode.GetBytes ( "0GM_" + tmp[0] + ";" + card ) );
+                        con.send ( Encoding.Unicode.GetBytes ( "0GM_" + tmp[0] + ";" + card + ";" + gameRooms[gamePointer[tmp[0]]].GetNext () ) );
                         Console.WriteLine ( tmp[0] + " has choosed to hit" );
                     }
                 }

@@ -75,11 +75,11 @@ namespace Client {
             con.OnReceiveCompleted += con_OnReceiveCompleted;
 
             this.step2_inst = step2_inst;
-            this.myPosition = position;
+            myPosition = position;
             myName = position == 1 ? host : guest;
             opponentName = position == 1 ? guest : host;
             this.Text = myName;
-            setPermission ( position == 1 ? true : false );
+            setPermission ( myPosition == 1 ? true : false );
         }
 
         void con_OnExceptionRaised ( object sender, ExceptionRaiseEventArgs args ) {
@@ -103,6 +103,7 @@ namespace Client {
                 string[] moves = text.Split ( new string[] { "0GM_" }, StringSplitOptions.RemoveEmptyEntries );
                 foreach ( string move in moves ) {
                     string[] tmp = move.Split ( new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries );
+
                     if ( tmp[0].Equals ( myName ) ) { // myCard
                         pb[myCardPos++].Image =
                             Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + int.Parse ( tmp[1] ).ToString () + @".bmp" );
@@ -110,6 +111,7 @@ namespace Client {
                         pb[opponentCardPos++].Image =
                             Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + int.Parse ( tmp[1] ).ToString () + @".bmp" );
                     }
+                    setPermission ( myPosition == UInt64.Parse ( tmp[2] ) ? true : false );
                 }
             }
 
@@ -119,9 +121,7 @@ namespace Client {
                     pb[i].Image = null;
                 myCardPos = 0;
                 opponentCardPos = 5;
-                if ( myName.Equals ( GetHost () ) )
-                    setPermission ( true );
-                else setPermission ( false );
+                setPermission ( myPosition == 1 ? true : false );
             }
 
            // win
