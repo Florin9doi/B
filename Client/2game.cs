@@ -18,7 +18,6 @@ namespace Client {
         private lobby step2_inst; // window instance
         private PictureBox[] pb;
 
-        private bool canPlay = true; // your turn ?
         private UInt16 myPosition;
         private String myName;
         private UInt16 myCardPos = 0;
@@ -26,7 +25,6 @@ namespace Client {
         private UInt16 opponentCardPos = 5;
 
         private void setPermission ( bool perm ) {
-            canPlay = perm;
             btnHit.Visible = perm;
             btnStand.Visible = perm;
         }
@@ -104,14 +102,16 @@ namespace Client {
                 foreach ( string move in moves ) {
                     string[] tmp = move.Split ( new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries );
 
-                    if ( tmp[0].Equals ( myName ) ) { // myCard
+                    if ( tmp[0].Equals ( myName ) && tmp.Length == 3 ) { // myCard
                         pb[myCardPos++].Image =
-                            Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + int.Parse ( tmp[1] ).ToString () + @".bmp" );
-                    } else if ( tmp[0].Equals ( opponentName ) ) { // oponentCard
+                            Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + int.Parse ( tmp[2] ).ToString () + @".bmp" );
+                    } else if ( tmp[0].Equals ( opponentName ) && tmp.Length == 3 ) { // oponentCard
                         pb[opponentCardPos++].Image =
-                            Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + int.Parse ( tmp[1] ).ToString () + @".bmp" );
+                            Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + int.Parse ( tmp[2] ).ToString () + @".bmp" );
                     }
-                    setPermission ( myPosition == UInt64.Parse ( tmp[2] ) ? true : false );
+
+                    if ( tmp[0].Equals ( myName ) || tmp[0].Equals ( opponentName ) )
+                        setPermission ( myPosition == UInt64.Parse ( tmp[1] ) ? true : false );
                 }
             }
 
@@ -121,6 +121,7 @@ namespace Client {
                     pb[i].Image = null;
                 myCardPos = 0;
                 opponentCardPos = 5;
+                chatOut.Text = "";
                 setPermission ( myPosition == 1 ? true : false );
             }
 

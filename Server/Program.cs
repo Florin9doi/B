@@ -57,7 +57,24 @@ namespace Server {
                     UInt64 returnCard = cardsArray[retPos];
                     cardMax--;
                     cardsArray[retPos] = cardsArray[cardMax];
-                    AddPoints ( player, returnCard );
+
+                    // calc
+                    UInt64 sc = 0;
+                    if ( returnCard % 13 == 0 )
+                        sc = 11;
+                    else if ( returnCard % 13 >= 1 && returnCard % 13 <= 9 )
+                        sc = returnCard % 13 + 1;
+                    else if ( returnCard % 13 >= 10 && returnCard % 13 <= 12 )
+                        sc = 10;
+
+                    // add
+                    if ( player == 1 )
+                        p1Score += sc;
+                    else if ( player == 2 )
+                        p2Score += sc;
+
+                    Console.WriteLine ( player1 + " have " + p1Score + "pts; " + player2 + " have " + p2Score + "pts" );
+
                     return returnCard;
                 }
                 return 0;
@@ -71,27 +88,6 @@ namespace Server {
                     stand2 = state;
             }
 
-            // calc points
-            public void AddPoints ( UInt64 player, UInt64 card ) {
-
-                // calc
-                UInt64 sc = 0;
-                if ( card % 13 == 0 )
-                    sc = 11;
-                else if ( card % 13 >= 1 && card % 13 <= 9 )
-                    sc = card % 13 + 1;
-                else if ( card % 13 >= 10 && card % 13 <= 12 )
-                    sc = 10;
-
-                // add
-                if ( player == 1 )
-                    p1Score = p1Score + sc;
-                else if ( player == 2 )
-                    p2Score = p2Score + sc;
-
-                Console.WriteLine ( player1 + " have " + p1Score + "pts; " + player2 + " have " + p2Score + "pts" );
-            }
-
             // get next player
             public UInt64 GetNext () {
                 if ( who == 1 && stand2 == false )
@@ -102,7 +98,6 @@ namespace Server {
                     who = 1;
                 else if ( who == 2 && stand1 == true )
                     who = 2;
-                Console.WriteLine ( "Who = " + who );
                 return who;
             }
         } // end of GameStruct
@@ -189,8 +184,8 @@ namespace Server {
                 gameRooms[nrOfGame] = new GameStruct ( nrOfGame, gameRooms[nrOfGame].player1, gameRooms[nrOfGame].player2, 1 );
 
                 con.send ( Encoding.Unicode.GetBytes ( text ) );
-                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + gameRooms[nrOfGame].player1 + ";" + gameRooms[nrOfGame].GetCard ( 1 ) + ";" + 1 ) );
-                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + gameRooms[nrOfGame].player2 + ";" + gameRooms[nrOfGame].GetCard ( 2 ) + ";" + 1 ) );
+                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + gameRooms[nrOfGame].player1 + ";" + 1 + ";" + gameRooms[nrOfGame].GetCard ( 1 ) ) );
+                con.send ( Encoding.Unicode.GetBytes ( "0GM_" + gameRooms[nrOfGame].player2 + ";" + 1 + ";" + gameRooms[nrOfGame].GetCard ( 2 ) ) );
             }
 
             // chat
@@ -205,28 +200,44 @@ namespace Server {
                 if ( gameRooms[gamePointer[tmp[0]]].who == UInt64.Parse ( tmp[1] ) ) { // right player
                     if ( UInt64.Parse ( tmp[2] ) == 0 ) { // stand
                         gameRooms[gamePointer[tmp[0]]].SetStand ( UInt64.Parse ( tmp[1] ), true );
-                        con.send ( Encoding.Unicode.GetBytes ( "0GM_" + tmp[0] + ";" + "-1" + ";" + gameRooms[gamePointer[tmp[0]]].GetNext () ) );
                         Console.WriteLine ( tmp[0] + " has choosed to stand" );
                     } else if ( UInt64.Parse ( tmp[2] ) == 1 ) { // hit
                         UInt64 card = gameRooms[gamePointer[tmp[0]]].GetCard ( UInt64.Parse ( tmp[1] ) );
-                        gameRooms[gamePointer[tmp[0]]].AddPoints ( UInt64.Parse ( tmp[1] ), card );
-                        con.send ( Encoding.Unicode.GetBytes ( "0GM_" + tmp[0] + ";" + card + ";" + gameRooms[gamePointer[tmp[0]]].GetNext () ) );
+                        con.send ( Encoding.Unicode.GetBytes ( "0GM_" + tmp[0] + ";" + gameRooms[gamePointer[tmp[0]]].GetNext () + ";" + card ) );
                         Console.WriteLine ( tmp[0] + " has choosed to hit" );
                     }
+
+                    UInt64 win = 0;
+                    if ( tmp[0].Equals ( gameRooms[gamePointer[tmp[0]]].player1 ) ) { // player 1
+                        if ( gameRooms[gamePointer[tmp[0]]].p1Score == 21 ) // p1 win
+                            win = 1;
+                        else if ( gameRooms[gamePointer[tmp[0]]].p1Score > 21 ) // p2 win
+                            win = 2;
+                    } else if ( tmp[0].Equals ( gameRooms[gamePointer[tmp[0]]].player2 ) ) { // player 2
+                        if ( gameRooms[gamePointer[tmp[0]]].p2Score == 21 ) // p2 win
+                            win = 2;
+                        else if ( gameRooms[gamePointer[tmp[0]]].p2Score > 21 ) // p1 win
+                            win = 1;
+                    } 
+                    if ( gameRooms[gamePointer[tmp[0]]].stand1 == true && gameRooms[gamePointer[tmp[0]]].stand2 == true ) {
+                        if ( gameRooms[gamePointer[tmp[0]]].p1Score > gameRooms[gamePointer[tmp[0]]].p2Score )
+                            win = 1;
+                        else win = 2;
+                    }
+
+                    if ( win == 1 ) {
+                        con.send ( Encoding.Unicode.GetBytes ( "0GW_" + gameRooms[gamePointer[tmp[0]]].player1 ) );
+                        Console.WriteLine ( gameRooms[gamePointer[tmp[0]]].player1 + " has won !!" );
+                    } else if ( win == 2 ) {
+                        con.send ( Encoding.Unicode.GetBytes ( "0GW_" + gameRooms[gamePointer[tmp[0]]].player2 ) );
+                        Console.WriteLine ( gameRooms[gamePointer[tmp[0]]].player2 + " has won !!" );
+                    } else if ( UInt64.Parse ( tmp[2] ) == 0 ) { // stand
+                        con.send ( Encoding.Unicode.GetBytes ( "0GM_" + tmp[0] + ";" + gameRooms[gamePointer[tmp[0]]].GetNext () ) );
+                    }
                 }
-                //        if ( win ) {
-                //            con.send ( Encoding.Unicode.GetBytes ( "0GW_" + tmp[0] ) );
-                //            Console.WriteLine ( tmp[0] + " has won !!" );
-                //        } else {
-                //            GameStruct g = gameRooms[gamePointer[tmp[0]]];
-                //            g.status = int.Parse ( tmp[3] ) == 1 ? (UInt64)2 : (UInt64)1;
-                //            gameRooms[gamePointer[tmp[0]]] = g;
-                //        }
-                //    }
-                //} 
-            } else {
+            } else
                 Console.WriteLine ( text );
-            }
+
         }
     }
 }
