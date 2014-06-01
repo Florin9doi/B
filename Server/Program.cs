@@ -23,19 +23,7 @@ namespace Server {
             public UInt64[] cardsArray;
             Random rnd;
 
-            public GameStruct ( UInt64 gameNr, string player1, UInt16 who ) {
-                this.gameNr = gameNr;
-                this.who = who;
-                this.player1 = player1;
-                this.player2 = "";
-                stand1 = false;
-                stand2 = false;
-                p1Score = 0; p2Score = 0;
-                cardMax = 52;
-                cardsArray = new UInt64[53];
-                rnd = new Random ();
-            }
-
+            // GameStruct constructor
             public GameStruct ( UInt64 gameNr, string player1, string player2, UInt16 who ) {
                 this.gameNr = gameNr;
                 this.who = who;
@@ -58,7 +46,7 @@ namespace Server {
                     cardMax--;
                     cardsArray[retPos] = cardsArray[cardMax];
 
-                    // calc
+                    // update score 
                     UInt64 sc = 0;
                     if ( returnCard % 13 == 0 )
                         sc = 11;
@@ -67,14 +55,12 @@ namespace Server {
                     else if ( returnCard % 13 >= 10 && returnCard % 13 <= 12 )
                         sc = 10;
 
-                    // add
                     if ( player == 1 )
                         p1Score += sc;
                     else if ( player == 2 )
                         p2Score += sc;
 
                     Console.WriteLine ( player1 + " have " + p1Score + "pts; " + player2 + " have " + p2Score + "pts" );
-
                     return returnCard;
                 }
                 return 0;
@@ -140,7 +126,7 @@ namespace Server {
                 string player1 = text.Substring ( 4 );
                 Console.WriteLine ( player1 + " has created a game" );
 
-                gameRooms.Add ( nrOfGame, new GameStruct ( nrOfGame, player1, 0 ) );
+                gameRooms.Add ( nrOfGame, new GameStruct ( nrOfGame, player1, "", 0 ) );
                 gamePointer.Add ( player1, nrOfGame );
 
                 /* register new game */
@@ -218,7 +204,7 @@ namespace Server {
                             win = 2;
                         else if ( gameRooms[gamePointer[tmp[0]]].p2Score > 21 ) // p1 win
                             win = 1;
-                    } 
+                    }
                     if ( gameRooms[gamePointer[tmp[0]]].stand1 == true && gameRooms[gamePointer[tmp[0]]].stand2 == true ) {
                         if ( gameRooms[gamePointer[tmp[0]]].p1Score > gameRooms[gamePointer[tmp[0]]].p2Score )
                             win = 1;
