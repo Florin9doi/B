@@ -106,8 +106,10 @@ namespace Client {
                         pb[myCardPos++].Image =
                             Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + int.Parse ( tmp[2] ).ToString () + @".bmp" );
                     } else if ( tmp[0].Equals ( opponentName ) && tmp.Length == 3 ) { // oponentCard
-                        pb[opponentCardPos++].Image =
-                            Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + int.Parse ( tmp[2] ).ToString () + @".bmp" );
+                        if ( opponentCardPos == 5 )
+                            pb[opponentCardPos++].Image = Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\Card_" + int.Parse ( tmp[2] ).ToString () + @".bmp" );
+                        else
+                            pb[opponentCardPos++].Image = Image.FromFile ( Directory.GetCurrentDirectory () + @"\Imagini\back.bmp" );
                     }
 
                     if ( tmp[0].Equals ( myName ) || tmp[0].Equals ( opponentName ) )

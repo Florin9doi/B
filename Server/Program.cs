@@ -46,7 +46,7 @@ namespace Server {
                     cardMax--;
                     cardsArray[retPos] = cardsArray[cardMax];
 
-                    // update score 
+                    // update score
                     UInt64 sc = 0;
                     if ( returnCard % 13 == 0 )
                         sc = 11;
